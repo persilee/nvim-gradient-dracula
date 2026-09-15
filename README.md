@@ -1,94 +1,104 @@
-# nvimpire
+# NeoVim Gradient Dracula
 
-[Dracula](https://draculatheme.com/) colors cheme built for Neovim 0.8+ using Lua that supports and
-customizes several popular Neovim plugins.
+在原版 [nvimpire](https://github.com/colevoss/nvimpire)（Dracula 配色）基础上，复刻 VSCode 扩展
+[`shaobeichen/gradient-theme`](https://github.com/shaobeichen/gradient-theme) 中
+**Gradient Dracula Theme** 的核心效果。
 
-![Transparent Nvimpire](https://user-images.githubusercontent.com/2539760/212601732-0b5d030c-6589-4eb5-92d3-9c6a41f3b854.png)
-![Opaque Nvimpire](https://user-images.githubusercontent.com/2539760/212601864-552178ec-d328-45bc-ab00-a052a2021546.png)
+![](./images/1Capture_2026-09-15_10.35.08.png)
 
+![](./images/1Capture_2026-09-15_10.39.40.png)
 
+## 核心效果：词内逐字母渐变（intra-word gradient）
 
-## Install
+VSCode 用 `background-clip:text` + `linear-gradient`，让**一个单词内部**从第一个字母到最后一个
+字母连续地由深到浅，例如 `colorscheme` 首字母是深绿、尾字母是亮绿。
 
-### Packer
+终端的高亮组一个组只能有一个颜色，无法做像素级连续渐变。本主题用 Neovim 的 extmark 逐字符上色
+来等价实现：
+
+1. 用 treesitter 的 highlights query 定位当前可见区域里每一个**彩色词**（关键字 / 函数名 /
+   字符串 / 数字 / 类型 / 参数 / 标签）的边界和语义类别；
+2. 对词内第 i 个字母，按它在词中的位置 `t = i / (n-1)`，用该类别的「深色端 → 浅色端」做插值
+   `mix(deep, bright, t)`；
+3. 给每个字母设置一个单字符 extmark（priority 高于 treesitter），于是整个词从首字母的深色
+   平滑过渡到尾字母的亮色。
+
+Dracula 各语义类别的渐变对（深 → 浅）：
+
+| 类别 | deep | bright | 例子 |
+| --- | --- | --- | --- |
+| keyword 关键字/语句 | `#C23594` | `#FF79C6` | `local` `function` `if` `return` |
+| function 函数/方法 | `#11998E` | `#50FA7B` | 函数调用名 |
+| string 字符串 | `#C9E34B` | `#F1FA8C` | `"dracula"` |
+| type 类型 | `#2EC5E6` | `#8BE9FD` | 类型名 |
+| constant/number 常量数字 | `#8B5CF6` | `#BD93F9` | `42` `true` |
+| parameter 参数 | `#FF7A3D` | `#FFB86C` | 函数参数 |
+| tag 标签 | `#FF61D2` | `#FE908F` | HTML/XML tag |
+
+普通变量名、标点、运算符保持正常前景色，不做渐变，避免整屏发花。没有 treesitter parser 时会
+退化为基于 Vim 语法高亮的分段渐变；含中文等多字节字符的词不会被逐字节拆开（保留正常高亮）。
+
+渲染只处理当前窗口可见行（带上下缓冲）并做了长度/总量上限，配合防抖，正常编辑无明显开销。
+
+## 安装（lazy.nvim）
 
 ```lua
-use { 'colevoss/nvimpire' }
-```
-
-### Usage
-
-```lua
-local colorscheme = 'nvimpire'
-local colorscheme_status_ok, _ = pcall(vim.cmd, "colorscheme " .. colorscheme)
-if not colorscheme_status_ok then
-  vim.notify("could not set color scheme to nvimpire")
-  return
-end
-```
-
-#### Transparent Mode
-
-By default, the colorscheme is not transparent, but was built with transparency in mind. In fact it was
-built transparency first, and later updated for non-transparent setups.
-
-```lua
-local nvimpire = require('nvimpire')
-local colorscheme = 'nvimpire'
-
-local colorscheme_status_ok, _ = pcall(vim.cmd, "colorscheme " .. colorscheme)
-if not colorscheme_status_ok then
-  vim.notify("could not set color scheme to nvimpire")
-  return
-end
-
-nvimpire.setup {
-  transparent = true
+{
+  "persilee/nvim-gradient-dracula",
+  name = "gradient_dracula",
+  lazy = false,
+  priority = 1000,
+  opts = {
+    transparent_bg = true,                        -- = transparent，主编辑区透明
+    style = "dracula",                            -- 主打 dracula（另含 monokai/firefox/bearded）
+    terminal_colors = true,                       -- 同步内置终端 g:terminal_color_*
+    italic_comment = true,                        -- = italic_comments
+    flow = { enabled = true, comments = false },  -- 词内渐变开关；comments=true 连注释也灰阶渐变
+  },
 }
 ```
 
-## Gradient mode (ported from VSCode gradient-theme)
+> 若出现 `Lua module not found for config ... use a config()`：lazy 会按插件名自动找主模块，
+> 本主题已内置 `gradient_dracula` / `nvim-gradient-dracula` 门面模块；也可显式写
+> `main = "nvimpire"`，或用 `config = function(_, o) require("nvimpire").setup(o) end`。
 
-This fork adds the flowing gradients of the VSCode *gradient-theme* to Neovim:
-per-syntax gradient color families, a per-character flowing text gradient
-(extmarks), an animated rainbow caret, and rainbow indent guides / statusline.
+## 配置项
 
-```lua
-require('nvimpire').setup({
-  style = 'dracula',     -- dracula | monokai | firefox | bearded
-  bold = true,           -- gradient tokens are bold like the VSCode version
-  animated_cursor = true,
-  flow = { enabled = true, scope = 'comment' }, -- comment | all | off
-})
-vim.cmd('colorscheme nvimpire')
+| 选项 | 默认 | 说明 |
+| --- | --- | --- |
+| `style` | `'dracula'` | 配色：dracula / monokai / firefox / bearded |
+| `flow.enabled` | `true` | 词内逐字母渐变总开关 |
+| `flow.comments` | `false` | 注释是否也做灰阶渐变 |
+| `bold` | `true` | 渐变词（每个逐字母高亮）加粗，对应 VSCode 的 font-weight:700，设 `false` 则常规字重 |
+| `animated_cursor`（别名 `cursor_color`） | `true` | 是否打开光标变色：九色流动光标（110ms 循环），设 `false` 关闭并恢复主题静态光标 |
+| `rainbow_indent` | `true` | 缩进线 / 当前行号彩虹渐变 |
+| `transparent`（别名 `transparent_bg`） | `false` | 透明背景 |
+| `italic_comments`（别名 `italic_comment`） | `true` | 注释斜体 |
+| `terminal_colors` | `true` | 同步内置终端配色 |
+| `steps` | `11` | 静态渐变色阶数 |
+
+## 命令
+
+| 命令 | 作用 |
+| --- | --- |
+| `:NvimpireGradientFlow on\|off` | 开/关词内逐字母渐变（无参数=切换） |
+| `:NvimpireGradientStyle <name>` | 运行时切换配色 |
+| `:NvimpireGradientCursor on\|off` | 开/关光标变色（无参数=切换），关闭后恢复静态光标 |
+
+## 文件结构
+
+```
+lua/nvimpire/
+  gradient.lua   # 颜色插值引擎 + 各配色的深/浅渐变对
+  flow.lua       # 词内逐字母渐变（treesitter + extmark）与流动光标
+  colors.lua     # 由渐变引擎生成调色板（保留全部旧颜色键，向后兼容）
+  groups/*.lua   # 静态高亮：词尾亮色端，作为渐变的落点与无 parser 时的回退
 ```
 
-Runtime commands: `:NvimpireGradientStyle <name>`, `:NvimpireGradientFlow all|comment|off`,
-`:NvimpireGradientCursor on|off`. See **[GRADIENT.md](./GRADIENT.md)** for the full
-mapping between the VSCode CSS gradients and their terminal implementation.
+## 测试
 
-## Supported Plugins
-
-Nvimpire customizes the following plugins
-* [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
-* [telescope](https://github.com/nvim-telescope/telescope.nvim)
-* [nvim-tree](https://github.com/nvim-tree/nvim-tree.lua)
-* [neo-tree](https://github.com/nvim-neo-tree/neo-tree.nvim)
-* [gitsigns](https://github.com/lewis6991/gitsigns.nvim)
-* [nvim-cmp](https://github.com/hrsh7th/nvim-cmp)
-* [trouble](https://github.com/folke/trouble.nvim)
-* [navic](https://github.com/SmiteshP/nvim-navic)
-* [mason](https://github.com/williamboman/mason.nvim)
-* [fidget](https://github.com/j-hui/fidget.nvim)
-* [notify](https://github.com/rcarriga/nvim-notify)
-* [illuminate](https://github.com/RRethy/vim-illuminate)
-
-## Inspiration
-
-[Dracula](https://draculatheme.com/vim) is my favorite colorscheme for pretty much all things. While I used their amazing Vim colorscheme I
-wanted more customization and support for various plugins as well as a better transparent mode. I also thought
-a Lua version would be great so I created my own version of it and built support for all my favorite Neovim
-plugins.
-
-This is my first Neovim plugin or colorscheme and I drew a lot of architecture inspiration from other popular Neovim colorschemes like
-[Catppuccin](https://github.com/catppuccin/nvim) and [tokyonight](https://github.com/folke/tokyonight.nvim).
+```bash
+nvim --headless -u NONE --cmd "set rtp+=." -c "luafile test/word_gradient_spec.lua" -c "qa!"
+nvim --headless -u NONE --cmd "set rtp+=." -c "luafile test/gradient_spec.lua" -c "qa!"
+nvim --headless -u NONE --cmd "set rtp+=." -c "luafile test/lazy_path_spec.lua" -c "qa!"
+```
