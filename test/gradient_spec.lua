@@ -84,43 +84,22 @@ for _, style in ipairs(grad.style_names) do
   check("style "..style.." applied", ok_s, cc.style_name or "?")
 end
 
-print("== 6. per-character flowing gradient (extmarks) ==")
+print("== 6. intra-word flowing gradient (extmarks) ==")
 vim.cmd("enew")
 vim.bo.filetype = "lua"
-local lines = {
-  "-- flowing gradient comment here",
-  "local function hello()",
-  "  local x = 123 -- inline comment",
-  "  return x",
-  "end",
-}
-vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
-local nsid = vim.api.nvim_get_namespaces()["nvimpire_gradient_flow"]
-check("flow namespace exists", nsid ~= nil)
-
-theme.flow.set_scope("all")
-vim.wait(120)
-local marks_all = vim.api.nvim_buf_get_extmarks(0, nsid, 0, -1, {})
-check("scope=all paints many char extmarks", #marks_all > 30, tostring(#marks_all))
-
-theme.flow.set_scope("comment")
-vim.wait(120)
-local marks_comment = vim.api.nvim_buf_get_extmarks(0, nsid, 0, -1, { details = true })
-local on_comment_line = 0
-for _, m in ipairs(marks_comment) do
-  if m[2] == 0 or m[2] == 2 then on_comment_line = on_comment_line + 1 end
-end
-local outside = 0
-for _, m in ipairs(marks_comment) do
-  if m[2] == 1 or m[2] == 3 or m[2] == 4 then outside = outside + 1 end
-end
-check("scope=comment paints comment chars", on_comment_line > 10, tostring(on_comment_line))
-check("scope=comment leaves code lines unmarked", outside == 0, tostring(outside))
-
-theme.flow.set_scope("off")
-vim.wait(60)
+vim.api.nvim_buf_set_lines(0, 0, -1, false, {
+  "local color = 42",
+  "local function hello() return \"dracula\" end",
+})
+local nsid = vim.api.nvim_get_namespaces()["nvimpire_word_gradient"]
+check("word-gradient namespace exists", nsid ~= nil)
+theme.flow._redraw_visible()
+local marks = vim.api.nvim_buf_get_extmarks(0, nsid, 0, -1, { details = true })
+check("colored words produce per-letter extmarks", #marks >= 8, tostring(#marks))
+theme.flow.set_enabled(false)
 local marks_off = vim.api.nvim_buf_get_extmarks(0, nsid, 0, -1, {})
-check("scope=off clears extmarks", #marks_off == 0, tostring(#marks_off))
+check("set_enabled(false) clears extmarks", #marks_off == 0, tostring(#marks_off))
+theme.flow.set_enabled(true)
 
 print("== 7. user commands ==")
 local cmds = vim.api.nvim_get_commands({})

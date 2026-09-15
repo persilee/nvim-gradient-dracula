@@ -20,17 +20,36 @@ local defaults = {
   rainbow_indent = true,
   -- animate the caret through the flowing rainbow gradient
   animated_cursor = true,
-  -- per-character flowing text gradient (Neovim extmarks)
+  -- sync :terminal / `g:terminal_color_0..15` with the active palette
+  terminal_colors = true,
+  -- intra-word flowing gradient: each colored word flows deep -> bright
+  -- from its first letter to its last (Neovim extmarks over treesitter)
   flow = {
     enabled = true,
-    scope = 'comment', -- "comment" | "all" | "off"
+    comments = false, -- also gradient-flow comments (muted gray ramp)
   },
+}
+
+-- Option aliases accepted from user configs (e.g. when the plugin is renamed
+-- for a package manager). Left side = alias, right side = canonical key.
+local aliases = {
+  transparent_bg = 'transparent',
+  italic_comment = 'italic_comments',
+  terminal_color = 'terminal_colors',
 }
 
 M.settings = lib.deep_copy(defaults)
 
 function M.config(opts)
   opts = opts or {}
+
+  -- normalize aliases onto the canonical option names
+  for alias, canonical in pairs(aliases) do
+    if opts[alias] ~= nil then
+      if opts[canonical] == nil then opts[canonical] = opts[alias] end
+      opts[alias] = nil
+    end
+  end
 
   M.settings = lib.extend(M.settings, opts)
   M.has_options = true

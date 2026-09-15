@@ -26,7 +26,7 @@ local groups = {
 	"harpoon",
 }
 
-function M.bootstrap()
+function M.bootstrap(name)
 	local clear = "hi clear"
 	vim.api.nvim_command(clear)
 
@@ -37,7 +37,7 @@ function M.bootstrap()
 
 	vim.o.background = "dark"
 	vim.o.termguicolors = true
-	vim.g.colors_name = "nvimpire"
+	vim.g.colors_name = name or "nvimpire"
 end
 
 local commands_registered = false
@@ -47,12 +47,17 @@ local function register_commands()
 	commands_registered = true
 
 	vim.api.nvim_create_user_command("NvimpireGradientFlow", function(opts)
-		local scope = opts.args ~= "" and opts.args or "all"
-		flow.set_scope(scope)
+		if opts.args == "off" then
+			flow.set_enabled(false)
+		elseif opts.args == "on" then
+			flow.set_enabled(true)
+		else
+			flow.toggle()
+		end
 	end, {
 		nargs = "?",
-		complete = function() return { "comment", "all", "off" } end,
-		desc = "Toggle nvimpire per-character flowing gradient",
+		complete = function() return { "on", "off" } end,
+		desc = "Toggle nvimpire intra-word flowing gradient",
 	})
 
 	vim.api.nvim_create_user_command("NvimpireGradientCursor", function(opts)
@@ -74,19 +79,28 @@ local function register_commands()
 	})
 end
 
+function M._apply_terminal_colors()
+	if config.settings.terminal_colors == false then return end
+	local c = colors_mod.colors
+	for i = 0, 15 do
+		vim.g["terminal_color_" .. i] = c["color_" .. i]
+	end
+end
+
 function M._start_effects()
+	M._apply_terminal_colors()
 	flow.setup(config.settings, colors_mod.colors)
 	register_commands()
 end
 
-function M._load()
-	M.bootstrap()
+function M._load(name)
+	M.bootstrap(name)
 	config.load_groups(groups)
 	M._start_effects()
 end
 
-function M.setup(opts)
-	M.bootstrap()
+function M.setup(opts, name)
+	M.bootstrap(name)
 	config.reset()
 	config.config(opts)
 	config.load_groups(groups)
@@ -106,7 +120,7 @@ function M.set_style(name)
 	end
 	flow.disable()
 	config.config({ style = name })
-	M.bootstrap()
+	M.bootstrap(vim.g.colors_name)
 	config.load_groups(groups)
 	M._start_effects()
 end
