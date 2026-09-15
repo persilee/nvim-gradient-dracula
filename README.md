@@ -4,7 +4,7 @@
 [`shaobeichen/gradient-theme`](https://github.com/shaobeichen/gradient-theme) 中
 **Gradient Dracula Theme** 的核心效果。
 
-![](./images/1Capture_2026-09-15_10.35.08.png)
+![](./images/0b6dab74-ba1b-4e3c-9cf7-dadfb0135b5e.png)
 
 ![](./images/1Capture_2026-09-15_10.39.40.png)
 
@@ -57,10 +57,6 @@ Dracula 各语义类别的渐变对（深 → 浅）：
   },
 }
 ```
-
-> 若出现 `Lua module not found for config ... use a config()`：lazy 会按插件名自动找主模块，
-> 本主题已内置 `gradient_dracula` / `nvim-gradient-dracula` 门面模块；也可显式写
-> `main = "nvimpire"`，或用 `config = function(_, o) require("nvimpire").setup(o) end`。
 
 ## 配置项
 
