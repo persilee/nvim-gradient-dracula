@@ -25,11 +25,11 @@ Dracula 各语义类别的渐变对（深 → 浅）：
 | --- | --- | --- | --- |
 | keyword 关键字/语句 | `#C23594` | `#FF79C6` | `local` `function` `if` `return` |
 | function 函数/方法 | `#11998E` | `#50FA7B` | 函数调用名 |
-| string 字符串 | `#C9E34B` | `#F1FA8C` | `"dracula"` |
 | type 类型 | `#2EC5E6` | `#8BE9FD` | 类型名 |
 | constant/number 常量数字 | `#8B5CF6` | `#BD93F9` | `42` `true` |
 | parameter 参数 | `#FF7A3D` | `#FFB86C` | 函数参数 |
 | tag 标签 | `#FF61D2` | `#FE908F` | HTML/XML tag |
+| string 字符串 | — | — | **不渐变**，保持主题静态黄色 `#F1FA8C` |
 
 普通变量名、标点、运算符保持正常前景色，不做渐变，避免整屏发花。没有 treesitter parser 时会
 退化为基于 Vim 语法高亮的分段渐变；含中文等多字节字符的词不会被逐字节拆开（保留正常高亮）。

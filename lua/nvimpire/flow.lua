@@ -88,7 +88,8 @@ local function family_of(name)
     return 'keyword'
   end
   if n:find('function') or n:find('method') then return 'func' end
-  if n:find('string') or n:find('character') or n:find('regex') then return 'string' end
+  -- strings intentionally left at their normal (static) highlight, no gradient
+  if n:find('string') or n:find('character') or n:find('regex') then return nil end
   if n:find('number') or n:find('boolean') or n:find('constant')
     or n == 'variable.builtin' or n:find('float') then
     return 'constant'
