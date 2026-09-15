@@ -63,15 +63,12 @@ local fnc = range_colors(14, 17)
 check("mix first == func deep", fnc[1] == fn[1], tostring(fnc[1]))
 check("mix last == func bright", fnc[3] == fn[11], tostring(fnc[3]))
 
-print("== number '42' flows deep purple -> bright purple ==")
-local ct = c.scale.constant
+print("== number '42' stays static (no gradient) ==")
 local nc = range_colors(18, 20)
-check("42 first == constant deep", nc[1] == ct[1], tostring(nc[1]))
-check("42 last == constant bright", nc[2] == ct[11], tostring(nc[2]))
+check("42 has no word-gradient extmarks", #nc == 0, tostring(#nc))
 
 print("== different families keep their own hue ==")
 check("keyword pink != function green", kwc[5] ~= fnc[3])
-check("function green != number purple", fnc[3] ~= nc[2])
 
 print("== plain identifier 'value' is left ungraded ==")
 local plain = range_colors(6, 11)

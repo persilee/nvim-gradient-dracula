@@ -26,7 +26,7 @@ Dracula 各语义类别的渐变对（深 → 浅）：
 | keyword 关键字/语句 | `#C23594` | `#FF79C6` | `local` `function` `if` `return` |
 | function 函数/方法 | `#11998E` | `#50FA7B` | 函数调用名 |
 | type 类型 | `#2EC5E6` | `#8BE9FD` | 类型名 |
-| constant/number 常量数字 | `#8B5CF6` | `#BD93F9` | `42` `true` |
+| constant/number 常量数字 | — | — | **不渐变**，保持主题静态紫色 `#BD93F9` |
 | parameter 参数 | `#FF7A3D` | `#FFB86C` | 函数参数 |
 | tag 标签 | `#FF61D2` | `#FE908F` | HTML/XML tag |
 | string 字符串 | — | — | **不渐变**，保持主题静态黄色 `#F1FA8C` |

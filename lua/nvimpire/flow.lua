@@ -90,9 +90,10 @@ local function family_of(name)
   if n:find('function') or n:find('method') then return 'func' end
   -- strings intentionally left at their normal (static) highlight, no gradient
   if n:find('string') or n:find('character') or n:find('regex') then return nil end
+  -- constants / numbers intentionally left at their normal (static) highlight
   if n:find('number') or n:find('boolean') or n:find('constant')
     or n == 'variable.builtin' or n:find('float') then
-    return 'constant'
+    return nil
   end
   if n:find('attribute') then return 'attr' end
   if n:find('tag') then return 'tag' end
