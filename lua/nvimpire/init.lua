@@ -61,7 +61,13 @@ local function register_commands()
 	})
 
 	vim.api.nvim_create_user_command("NvimpireGradientCursor", function(opts)
-		flow.set_cursor(opts.args ~= "off")
+		if opts.args == "off" then
+			flow.set_cursor(false)
+		elseif opts.args == "on" then
+			flow.set_cursor(true)
+		else
+			flow.set_cursor(not flow.cursor_enabled())
+		end
 	end, {
 		nargs = "?",
 		complete = function() return { "on", "off" } end,

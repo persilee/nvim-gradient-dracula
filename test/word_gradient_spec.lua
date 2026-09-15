@@ -39,6 +39,14 @@ local function range_colors(s, e) -- row 0, columns [s,e)
   return out
 end
 
+print("== gradient letters are bold ==")
+do
+  local grp = all[1][4].hl_group
+  local hl = type(grp) == "number" and vim.api.nvim_get_hl(0, { id = grp })
+    or vim.api.nvim_get_hl(0, { name = grp, link = false })
+  check("per-letter highlight is bold", hl.bold == true, tostring(hl.bold))
+end
+
 print("== keyword 'local' flows deep pink -> bright pink ==")
 local kw = c.scale.keyword
 local kwc = range_colors(0, 5)
@@ -73,6 +81,14 @@ print("== disabling clears the per-letter marks ==")
 theme.flow.set_enabled(false)
 local off = vim.api.nvim_buf_get_extmarks(0, ns, 0, -1, {})
 check("marks cleared after disable", #off == 0, tostring(#off))
+theme.flow.set_enabled(true)
+
+print("== colored caret switch ==")
+check("caret off when animated_cursor=false at setup", theme.flow.cursor_enabled() == false)
+theme.flow.set_cursor(true)
+check("set_cursor(true) starts it", theme.flow.cursor_enabled() == true)
+theme.flow.set_cursor(false)
+check("set_cursor(false) stops it", theme.flow.cursor_enabled() == false)
 
 theme.flow.disable()
 print("")

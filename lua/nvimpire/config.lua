@@ -36,6 +36,10 @@ local aliases = {
   transparent_bg = 'transparent',
   italic_comment = 'italic_comments',
   terminal_color = 'terminal_colors',
+  -- friendlier names for the flowing colored caret
+  cursor_color = 'animated_cursor',
+  color_cursor = 'animated_cursor',
+  rainbow_cursor = 'animated_cursor',
 }
 
 M.settings = lib.deep_copy(defaults)

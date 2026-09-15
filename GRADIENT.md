@@ -65,8 +65,8 @@ Dracula 各语义类别的渐变对（深 → 浅）：
 | `style` | `'dracula'` | 配色：dracula / monokai / firefox / bearded |
 | `flow.enabled` | `true` | 词内逐字母渐变总开关 |
 | `flow.comments` | `false` | 注释是否也做灰阶渐变 |
-| `bold` | `true` | 渐变词加粗（对应 VSCode 的 font-weight:700） |
-| `animated_cursor` | `true` | 九色流动光标（110ms 循环） |
+| `bold` | `true` | 渐变词（每个逐字母高亮）加粗，对应 VSCode 的 font-weight:700，设 `false` 则常规字重 |
+| `animated_cursor`（别名 `cursor_color`） | `true` | 是否打开光标变色：九色流动光标（110ms 循环），设 `false` 关闭并恢复主题静态光标 |
 | `rainbow_indent` | `true` | 缩进线 / 当前行号彩虹渐变 |
 | `transparent`（别名 `transparent_bg`） | `false` | 透明背景 |
 | `italic_comments`（别名 `italic_comment`） | `true` | 注释斜体 |
@@ -79,7 +79,7 @@ Dracula 各语义类别的渐变对（深 → 浅）：
 | --- | --- |
 | `:NvimpireGradientFlow on\|off` | 开/关词内逐字母渐变（无参数=切换） |
 | `:NvimpireGradientStyle <name>` | 运行时切换配色 |
-| `:NvimpireGradientCursor on\|off` | 开/关流动光标 |
+| `:NvimpireGradientCursor on\|off` | 开/关光标变色（无参数=切换），关闭后恢复静态光标 |
 
 ## 文件结构
 

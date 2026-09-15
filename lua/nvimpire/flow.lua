@@ -36,14 +36,17 @@ local state = {
   colors = nil,
   enabled = true,
   comments = false,
+  bold = true,
   augroup = nil,
   cursor_timer = nil,
   cursor_index = 0,
+  cursor_saved = nil,
   hl_cache = {},
 }
 
 local PAD_LINES = 40
 local MAX_COLS = 600
+local CURSOR_GROUPS = { 'Cursor', 'lCursor', 'CursorIM', 'TermCursor' }
 
 -- --------------------------------------------------------------------------
 -- per-hex highlight groups (cached, reused across buffers / redraws)
@@ -53,7 +56,8 @@ local function hl_for_hex(hex)
   local name = state.hl_cache[hex]
   if not name then
     name = 'NvWord' .. hex:gsub('#', '')
-    vim.api.nvim_set_hl(0, name, { fg = hex })
+    -- gradient words are bold (the VSCode theme renders gradient tokens at 700)
+    vim.api.nvim_set_hl(0, name, { fg = hex, bold = state.bold })
     state.hl_cache[hex] = name
   end
   return name
@@ -266,7 +270,7 @@ end
 -- flowing rainbow caret (ported from the VSCode div.cursor animation)
 -- --------------------------------------------------------------------------
 
-local function stop_cursor()
+local function stop_timer()
   if state.cursor_timer then
     state.cursor_timer:stop()
     state.cursor_timer:close()
@@ -274,8 +278,30 @@ local function stop_cursor()
   end
 end
 
+-- remember the theme's static caret so we can restore it when color is off
+local function snapshot_cursor()
+  if state.cursor_saved then return end
+  state.cursor_saved = {}
+  for _, g in ipairs(CURSOR_GROUPS) do
+    local ok, def = pcall(vim.api.nvim_get_hl, 0, { name = g, link = false })
+    state.cursor_saved[g] = (ok and def) or {}
+  end
+end
+
+local function restore_cursor()
+  if not state.cursor_saved then return end
+  for _, g in ipairs(CURSOR_GROUPS) do
+    local def = state.cursor_saved[g] or {}
+    if next(def) then
+      vim.api.nvim_set_hl(0, g, def)
+    else
+      pcall(vim.cmd, 'highlight! link ' .. g .. ' Cursor')
+    end
+  end
+end
+
 local function start_cursor()
-  stop_cursor()
+  stop_timer()
   local flow_colors = state.colors.cursor_flow
   if not flow_colors then return end
   state.cursor_index = 0
@@ -284,7 +310,7 @@ local function start_cursor()
     state.cursor_index = (state.cursor_index + 1) % #flow_colors
     local hex = flow_colors[state.cursor_index + 1]
     vim.schedule(function()
-      for _, g in ipairs({ 'Cursor', 'lCursor', 'CursorIM', 'TermCursor' }) do
+      for _, g in ipairs(CURSOR_GROUPS) do
         vim.api.nvim_set_hl(0, g, { fg = state.colors.bg_dark, bg = hex, bold = true })
       end
     end)
@@ -329,6 +355,7 @@ function M.setup(settings, colors)
   state.settings = settings
   state.colors = colors
   state.hl_cache = {}
+  state.bold = settings.bold ~= false
 
   local flow_cfg = settings.flow or {}
   -- legacy scope: 'off' disables; 'comment'/'all' enable intra-word gradient
@@ -346,9 +373,12 @@ function M.setup(settings, colors)
     schedule_redraw()
   end
 
-  stop_cursor()
+  stop_timer()
   if settings.animated_cursor ~= false then
+    snapshot_cursor()
     start_cursor()
+  else
+    restore_cursor()
   end
 end
 
@@ -369,11 +399,22 @@ function M.toggle()
 end
 
 function M.set_cursor(on)
-  if on then start_cursor() else stop_cursor() end
+  if on then
+    snapshot_cursor()
+    start_cursor()
+  else
+    stop_timer()
+    restore_cursor()
+  end
+end
+
+function M.cursor_enabled()
+  return state.cursor_timer ~= nil
 end
 
 function M.disable()
-  stop_cursor()
+  stop_timer()
+  restore_cursor()
   detach_autocmds()
   clear_all()
 end

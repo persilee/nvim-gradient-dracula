@@ -20,14 +20,17 @@ ok("facades are the same module", by_repo==core and by_name==core)
 print("== user option aliases accepted ==")
 by_name.setup({
   transparent_bg = true, style = "dracula", terminal_colors = true,
-  italic_comment = true, flow = { enabled = true, scope = "comment" },
+  italic_comment = true, cursor_color = false,
+  flow = { enabled = true, scope = "comment" },
 })
 local cfg = require("nvimpire.config")
 ok("transparent_bg -> transparent", cfg.settings.transparent == true)
 ok("italic_comment -> italic_comments", cfg.settings.italic_comments == true)
 ok("terminal_colors kept", cfg.settings.terminal_colors == true)
+ok("cursor_color -> animated_cursor", cfg.settings.animated_cursor == false)
 ok("flow.scope kept", cfg.settings.flow.scope == "comment")
-ok("alias keys removed", cfg.settings.transparent_bg == nil and cfg.settings.italic_comment == nil)
+ok("alias keys removed", cfg.settings.transparent_bg == nil and cfg.settings.italic_comment == nil
+  and cfg.settings.cursor_color == nil)
 
 print("== terminal colors applied ==")
 local c = require("nvimpire.colors").colors
