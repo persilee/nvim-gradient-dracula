@@ -130,37 +130,51 @@ M.styles = {
   dracula = {
     label = "Gradient Dracula",
     base = {
-      bg = "#282A36", bg_light = "#343746", bg_lighter = "#424450",
-      bg_dark = "#21222C", bg_darker = "#191A21",
-      fg = "#F8F8F2", selection = "#44475A", current_line = "#44475A",
-      subtle = "#424450", comment = "#6272A4",
+      bg = "#282A36",
+      bg_light = "#343746",
+      bg_lighter = "#424450",
+      bg_dark = "#21222C",
+      bg_darker = "#191A21",
+      fg = "#F8F8F2",
+      selection = "#44475A",
+      current_line = "#44475A",
+      subtle = "#424450",
+      comment = "#6272A4",
     },
     sem = {
-      keyword   = { "#C23594", "#FF79C6" }, -- pink
-      func      = { "#11998E", "#50FA7B" }, -- VSCode #11998f -> #38ef7d
-      string    = { "#C9E34B", "#F1FA8C" }, -- yellow
-      type      = { "#2EC5E6", "#8BE9FD" }, -- cyan
-      constant  = { "#8B5CF6", "#BD93F9" }, -- purple
-      parameter = { "#FF7A3D", "#FFB86C" }, -- orange
-      tag       = { "#FF61D2", "#FE908F" }, -- VSCode dracula tag pair
-      attr      = { "#11998F", "#38EF7D" }, -- VSCode dracula attr pair
-      operator  = { "#E056B0", "#FF9ED2" },
+      keyword   = { "#DA50A8", "#FF79C6" }, -- pink（原 #C23594）
+      func      = { "#2AC086", "#50FA7B" }, -- green（原 #11998E）
+      string    = { "#C9E34B", "#F1FA8C" }, -- yellow（不渐变，保持原样）
+      type      = { "#53D3EF", "#8BE9FD" }, -- cyan（原 #2EC5E6）
+      constant  = { "#8B5CF6", "#BD93F9" }, -- purple（不渐变，保持原样）
+      parameter = { "#FF9350", "#FFB86C" }, -- orange（原 #FF7A3D）
+      tag       = { "#FF74B7", "#FE908F" }, -- 原 #FF61D2
+      attr      = { "#21BB88", "#38EF7D" }, -- 原 #11998F
+      operator  = { "#EC73BE", "#FF9ED2" }, -- 原 #E056B0
       error     = { "#E63E4E", "#FF5555" },
       warn      = { "#E08A19", "#FFB86C" },
       info      = { "#2EC5E6", "#8BE9FD" },
       hint      = { "#8B5CF6", "#BD93F9" },
     },
-    rainbow = RAINBOW, cursor_flow = CURSOR_FLOW, text_flow = TEXT_FLOW,
+    rainbow = RAINBOW,
+    cursor_flow = CURSOR_FLOW,
+    text_flow = TEXT_FLOW,
   },
 
   -- gradient-monokai-pro / -classic ----------------------------------------
   monokai = {
     label = "Gradient Monokai Pro",
     base = {
-      bg = "#2D2A2E", bg_light = "#383539", bg_lighter = "#403E41",
-      bg_dark = "#221F22", bg_darker = "#19181A",
-      fg = "#FCFCFA", selection = "#403E41", current_line = "#403E41",
-      subtle = "#403E41", comment = "#727072",
+      bg = "#2D2A2E",
+      bg_light = "#383539",
+      bg_lighter = "#403E41",
+      bg_dark = "#221F22",
+      bg_darker = "#19181A",
+      fg = "#FCFCFA",
+      selection = "#403E41",
+      current_line = "#403E41",
+      subtle = "#403E41",
+      comment = "#727072",
     },
     sem = {
       keyword   = { "#DB3371", "#FF6188" }, -- VSCode #db3371 -> #ff9ec2
@@ -177,17 +191,25 @@ M.styles = {
       info      = { "#0792AE", "#78DCE8" },
       hint      = { "#9368E9", "#AB9DF2" },
     },
-    rainbow = RAINBOW, cursor_flow = CURSOR_FLOW, text_flow = TEXT_FLOW,
+    rainbow = RAINBOW,
+    cursor_flow = CURSOR_FLOW,
+    text_flow = TEXT_FLOW,
   },
 
   -- gradient-developer-theme-firefox-dark ----------------------------------
   firefox = {
     label = "Gradient Firefox Dark",
     base = {
-      bg = "#23293B", bg_light = "#2E364D", bg_lighter = "#3A435C",
-      bg_dark = "#181D27", bg_darker = "#10141C",
-      fg = "#F9F9F9", selection = "#2E4052", current_line = "#2E364D",
-      subtle = "#3A435C", comment = "#6B7480",
+      bg = "#23293B",
+      bg_light = "#2E364D",
+      bg_lighter = "#3A435C",
+      bg_dark = "#181D27",
+      bg_darker = "#10141C",
+      fg = "#F9F9F9",
+      selection = "#2E4052",
+      current_line = "#2E364D",
+      subtle = "#3A435C",
+      comment = "#6B7480",
     },
     sem = {
       keyword   = { "#0975CE", "#6CB6FF" }, -- VSCode mtk6 blue
@@ -204,17 +226,25 @@ M.styles = {
       info      = { "#15DBE2", "#9CECFE" },
       hint      = { "#6B89FF", "#A47EFA" },
     },
-    rainbow = RAINBOW, cursor_flow = CURSOR_FLOW, text_flow = TEXT_FLOW,
+    rainbow = RAINBOW,
+    cursor_flow = CURSOR_FLOW,
+    text_flow = TEXT_FLOW,
   },
 
   -- gradient-bearded-theme-arc-woodfishhhh (the most complete VSCode one) ---
   bearded = {
     label = "Gradient Bearded Arc",
     base = {
-      bg = "#1E2030", bg_light = "#292C42", bg_lighter = "#33374F",
-      bg_dark = "#191B29", bg_darker = "#141622",
-      fg = "#CAD3F5", selection = "#2F334D", current_line = "#292C42",
-      subtle = "#33374F", comment = "#8189A6",
+      bg = "#1E2030",
+      bg_light = "#292C42",
+      bg_lighter = "#33374F",
+      bg_dark = "#191B29",
+      bg_darker = "#141622",
+      fg = "#CAD3F5",
+      selection = "#2F334D",
+      current_line = "#292C42",
+      subtle = "#33374F",
+      comment = "#8189A6",
     },
     sem = {
       keyword   = { "#B78AFF", "#D874FF" }, -- VSCode declaration purple
@@ -231,7 +261,9 @@ M.styles = {
       info      = { "#22ECDB", "#00BBFF" },
       hint      = { "#B78AFF", "#F644FF" },
     },
-    rainbow = RAINBOW, cursor_flow = CURSOR_FLOW, text_flow = TEXT_FLOW,
+    rainbow = RAINBOW,
+    cursor_flow = CURSOR_FLOW,
+    text_flow = TEXT_FLOW,
   },
 }
 
@@ -293,39 +325,39 @@ function M.build(style_name, steps)
   c.attr_deep      = deep("attr")
 
   -- ramps -------------------------------------------------------------------
-  local scale = {}
+  local scale      = {}
   for fam, pair in pairs(style.sem) do
     scale[fam] = M.scale(pair, steps)
   end
   -- rainbow ramp is cyclic: append the first stop so it loops seamlessly
-  local rainbow = M.scale(style.rainbow, steps + 1)
+  local rainbow     = M.scale(style.rainbow, steps + 1)
   rainbow[#rainbow] = nil
-  c.scale = scale
-  c.rainbow = rainbow
-  c.cursor_flow = style.cursor_flow
-  c.text_flow = style.text_flow
-  c.style_name = style_name
-  c.style_label = style.label
+  c.scale           = scale
+  c.rainbow         = rainbow
+  c.cursor_flow     = style.cursor_flow
+  c.text_flow       = style.text_flow
+  c.style_name      = style_name
+  c.style_label     = style.label
 
   -- ANSI palette ------------------------------------------------------------
-  c.color_0 = c.bg_dark
-  c.color_1 = c.red
-  c.color_2 = c.green
-  c.color_3 = c.yellow
-  c.color_4 = c.purple
-  c.color_5 = c.pink
-  c.color_6 = c.cyan
-  c.color_7 = c.fg
-  c.color_8 = c.comment
-  c.color_9  = M.tint(c.red, 0.25)
-  c.color_10 = M.tint(c.green, 0.25)
-  c.color_11 = M.tint(c.yellow, 0.25)
-  c.color_12 = M.tint(c.purple, 0.25)
-  c.color_13 = M.tint(c.pink, 0.25)
-  c.color_14 = M.tint(c.cyan, 0.25)
-  c.color_15 = "#FFFFFF"
+  c.color_0         = c.bg_dark
+  c.color_1         = c.red
+  c.color_2         = c.green
+  c.color_3         = c.yellow
+  c.color_4         = c.purple
+  c.color_5         = c.pink
+  c.color_6         = c.cyan
+  c.color_7         = c.fg
+  c.color_8         = c.comment
+  c.color_9         = M.tint(c.red, 0.25)
+  c.color_10        = M.tint(c.green, 0.25)
+  c.color_11        = M.tint(c.yellow, 0.25)
+  c.color_12        = M.tint(c.purple, 0.25)
+  c.color_13        = M.tint(c.pink, 0.25)
+  c.color_14        = M.tint(c.cyan, 0.25)
+  c.color_15        = "#FFFFFF"
 
-  c.none = "NONE"
+  c.none            = "NONE"
   return c
 end
 
