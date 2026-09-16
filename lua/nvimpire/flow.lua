@@ -81,10 +81,10 @@ local function family_of(name)
   if n:find('comment') then return state.comments and 'comment_family' or nil end
   if n:find('parameter') then return 'parameter' end
   if n:find('keyword') or n == 'operator' or n:find('conditional')
-    or n:find('repeat') or n:find('statement') or n:find('storageclass')
-    or n:find('preproc') or n:find('include') or n:find('macro')
-    or n:find('exception') or n:find('define') or n:find('label')
-    or n:find('directive') or n:find('namespace') then
+      or n:find('repeat') or n:find('statement') or n:find('storageclass')
+      or n:find('preproc') or n:find('include') or n:find('macro')
+      or n:find('exception') or n:find('define') or n:find('label')
+      or n:find('directive') or n:find('namespace') then
     return 'keyword'
   end
   if n:find('function') or n:find('method') then return 'func' end
@@ -92,13 +92,13 @@ local function family_of(name)
   if n:find('string') or n:find('character') or n:find('regex') then return nil end
   -- constants / numbers intentionally left at their normal (static) highlight
   if n:find('number') or n:find('boolean') or n:find('constant')
-    or n == 'variable.builtin' or n:find('float') then
+      or n == 'variable.builtin' or n:find('float') then
     return nil
   end
   if n:find('attribute') then return 'attr' end
   if n:find('tag') then return 'tag' end
   if n:find('type') or n:find('class') or n:find('constructor')
-    or n:find('struct') or n:find('enum') then
+      or n:find('struct') or n:find('enum') then
     return 'type'
   end
   return nil
@@ -147,8 +147,16 @@ local function paint_node(buf, node, fam, top, bottom)
     local c1 = (row == er) and ec or math.min(#line, MAX_COLS)
     for col = c0, c1 - 1 do
       if in_view then
-        local t = (total > 1) and (offset / (total - 1)) or 1
-        local hex = grad.mix(deep, bright, t)
+        -- 短词压缩渐变范围：词越短，取色越靠近中间色，色差越小；
+        -- 词越长，越接近完整的 deep -> bright 渐变。
+        local raw          = (total > 1) and (offset / (total - 1)) or 1
+        local MIN_LEN      = 3    -- 小于等于这个长度时，渐变最弱
+        local FULL_LEN     = 10   -- 达到这个长度时，用完整的 deep -> bright
+        local MIN_STRENGTH = 0.15 -- 最短的词也保留一点点渐变（0=完全同色，1=完整）
+        local strength     = MIN_STRENGTH + (1 - MIN_STRENGTH)
+            * math.min(1, math.max(0, (total - MIN_LEN) / (FULL_LEN - MIN_LEN)))
+        local t            = 0.5 + (raw - 0.5) * strength
+        local hex          = grad.mix(deep, bright, t)
         vim.api.nvim_buf_set_extmark(buf, ns, row, col, {
           end_col = col + 1,
           hl_group = hl_for_hex(hex),
