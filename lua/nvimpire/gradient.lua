@@ -138,7 +138,7 @@ M.styles = {
       fg = "#F8F8F2",
       selection = "#44475A",
       current_line = "#44475A",
-      subtle = "#6B6F85",
+      subtle = "#b2bbc2",
       comment = "#8E99C8",
     },
     sem = {
