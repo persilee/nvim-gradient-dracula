@@ -139,7 +139,7 @@ M.styles = {
       selection = "#44475A",
       current_line = "#44475A",
       subtle = "#7D8199",
-      comment = "#6272A4",
+      comment = "#b2bbc2",
     },
     sem = {
       keyword   = { "#C23594", "#FF79C6" }, -- pink
