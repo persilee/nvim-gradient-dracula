@@ -26,7 +26,8 @@ local defaults = {
   -- from its first letter to its last (Neovim extmarks over treesitter)
   flow = {
     enabled = true,
-    comments = false, -- also gradient-flow comments (muted gray ramp)
+    comments = false,       -- also gradient-flow comments (muted gray ramp)
+    operator_static = true, -- true=操作符整词单色不分割; false=操作符恢复词内渐变
   },
 }
 

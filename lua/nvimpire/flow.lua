@@ -37,6 +37,7 @@ local state = {
   enabled = true,
   comments = false,
   bold = true,
+  operator_static = true,
   augroup = nil,
   cursor_timer = nil,
   cursor_index = 0,
@@ -80,9 +81,11 @@ local function family_of(name)
   local n = name:lower()
   if n:find('comment') then return state.comments and 'comment_family' or nil end
   if n:find('parameter') then return 'parameter' end
-  -- operators intentionally left at their normal (static) highlight,
-  -- so ligatures like ==, =>, -> are not split into per-letter extmarks
-  if n == 'operator' then return nil end
+  -- operators: operator_static=true 时整词单色（不分割，ligature 正常）；
+  -- operator_static=false 时走 keyword 词内渐变（分割）
+  if n == 'operator' then
+    return state.operator_static and 'operator_static' or 'keyword'
+  end
   if n:find('keyword') or n:find('conditional')
       or n:find('repeat') or n:find('statement') or n:find('storageclass')
       or n:find('preproc') or n:find('include') or n:find('macro')
@@ -111,6 +114,11 @@ end
 local function ramp_for(fam)
   if fam == 'comment_family' then
     return { state.colors.subtle, state.colors.comment }
+  end
+  -- operator 整词单色：用 keyword 亮端粉，deep=bright 所以不渐变
+  if fam == 'operator_static' then
+    local kw = state.colors.scale.keyword
+    return { kw[#kw], kw[#kw] }
   end
   return state.colors.scale[fam]
 end
@@ -378,6 +386,7 @@ function M.setup(settings, colors)
     state.enabled = flow_cfg.enabled ~= false
   end
   state.comments = flow_cfg.comments == true
+  state.operator_static = flow_cfg.operator_static ~= false
 
   detach_autocmds()
   clear_all()
