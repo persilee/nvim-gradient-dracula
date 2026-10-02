@@ -80,7 +80,10 @@ local function family_of(name)
   local n = name:lower()
   if n:find('comment') then return state.comments and 'comment_family' or nil end
   if n:find('parameter') then return 'parameter' end
-  if n:find('keyword') or n == 'operator' or n:find('conditional')
+  -- operators intentionally left at their normal (static) highlight,
+  -- so ligatures like ==, =>, -> are not split into per-letter extmarks
+  if n == 'operator' then return nil end
+  if n:find('keyword') or n:find('conditional')
       or n:find('repeat') or n:find('statement') or n:find('storageclass')
       or n:find('preproc') or n:find('include') or n:find('macro')
       or n:find('exception') or n:find('define') or n:find('label')
