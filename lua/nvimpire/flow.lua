@@ -161,9 +161,9 @@ local function paint_node(buf, node, fam, top, bottom)
         -- 短词压缩渐变范围：词越短，取色越靠近中间色，色差越小；
         -- 词越长，越接近完整的 deep -> bright 渐变。
         local raw          = (total > 1) and (offset / (total - 1)) or 1
-        local MIN_LEN      = 3    -- 小于等于这个长度时，渐变最弱
-        local FULL_LEN     = 10   -- 达到这个长度时，用完整的 deep -> bright
-        local MIN_STRENGTH = 0.15 -- 最短的词也保留一点点渐变（0=完全同色，1=完整）
+        local MIN_LEN      = 3  -- 小于等于这个长度时，渐变最弱
+        local FULL_LEN     = 10 -- 达到这个长度时，用完整的 deep -> bright
+        local MIN_STRENGTH = 0  -- 最短的词也保留一点点渐变（0=完全同色，1=完整）
         local strength     = MIN_STRENGTH + (1 - MIN_STRENGTH)
             * math.min(1, math.max(0, (total - MIN_LEN) / (FULL_LEN - MIN_LEN)))
         local t            = 0.5 + (raw - 0.5) * strength
