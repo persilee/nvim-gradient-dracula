@@ -220,7 +220,11 @@ local function redraw_syntax(buf, top, bottom)
         local ramp = ramp_for(seg_fam)
         local len = end_col - seg_start
         for col = seg_start, end_col - 1 do
-          local t = (len > 1) and ((col - seg_start) / (len - 1)) or 1
+          local raw = (len > 1) and ((col - seg_start) / (len - 1)) or 1
+          local MIN_LEN, FULL_LEN, MIN_STRENGTH = 2, 10, 0.15
+          local strength = MIN_STRENGTH + (1 - MIN_STRENGTH)
+              * math.min(1, math.max(0, (len - MIN_LEN) / (FULL_LEN - MIN_LEN)))
+          local t = 0.5 + (raw - 0.5) * strength
           local hex = grad.mix(ramp[1], ramp[#ramp], t)
           vim.api.nvim_buf_set_extmark(buf, ns, row, col, {
             end_col = col + 1, hl_group = hl_for_hex(hex), priority = 10000,
