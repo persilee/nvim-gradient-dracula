@@ -160,14 +160,13 @@ local function paint_node(buf, node, fam, top, bottom)
       if in_view then
         -- 短词压缩渐变范围：词越短，取色越靠近中间色，色差越小；
         -- 词越长，越接近完整的 deep -> bright 渐变。
-        local raw          = (total > 1) and (offset / (total - 1)) or 1
-        local MIN_LEN      = 3  -- 小于等于这个长度时，渐变最弱
-        local FULL_LEN     = 10 -- 达到这个长度时，用完整的 deep -> bright
-        local MIN_STRENGTH = 0  -- 最短的词也保留一点点渐变（0=完全同色，1=完整）
-        local strength     = MIN_STRENGTH + (1 - MIN_STRENGTH)
+        local raw                             = (total > 1) and (offset / (total - 1)) or 1
+        -- 短词压缩：词越短渐变越弱，长词才完整渐变
+        local MIN_LEN, FULL_LEN, MIN_STRENGTH = 2, 10, 0.15
+        local strength                        = MIN_STRENGTH + (1 - MIN_STRENGTH)
             * math.min(1, math.max(0, (total - MIN_LEN) / (FULL_LEN - MIN_LEN)))
-        local t            = 0.5 + (raw - 0.5) * strength
-        local hex          = grad.mix(deep, bright, t)
+        local t                               = 0.5 + (raw - 0.5) * strength
+        local hex                             = grad.mix(deep, bright, t)
         vim.api.nvim_buf_set_extmark(buf, ns, row, col, {
           end_col = col + 1,
           hl_group = hl_for_hex(hex),
